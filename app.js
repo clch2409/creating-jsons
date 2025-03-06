@@ -29,12 +29,12 @@ while(true){
   console.log(insumos)
   
   if(continuar === 'N')  {
-    await guardarInsumos()
+    await guardarInsumos('../mi-desayunito-project/web/json/insumos.json', `${JSON.stringify(insumos)}`)
     break;
   }
 }
 
-async function guardarInsumos() {
-  const archivo = await writeFile('../mi-desayunito-project/web/insumos.json', `${JSON.stringify(insumos)}`)
+async function guardarInsumos(path, data) {
+  const archivo = await writeFile(path, data)
   rl.close()
 }
