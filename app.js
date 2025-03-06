@@ -1,4 +1,5 @@
 import readline from 'node:readline/promises';
+import  { writeFile } from 'node:fs/promises';
 
 let insumos = []
 
@@ -18,8 +19,6 @@ while(true){
   const tipoDeInsumo = await rl.question('Escribe el tipo de insumo: ')
   const continuar = await rl.question('Deseas agregar otro insumo? (S/N): ')
 
-  if(continuar === 'N') break
-
   insumos.push({
     nombre,
     precio,
@@ -27,7 +26,15 @@ while(true){
     tipoDeInsumo
   })
 
-  rl.close()
+  console.log(insumos)
+  
+  if(continuar === 'N')  {
+    await guardarInsumos()
+    break;
+  }
 }
 
-console.log(insumos)
+async function guardarInsumos() {
+  const archivo = await writeFile('../mi-desayunito-project/web/insumos.json', `${JSON.stringify(insumos)}`)
+  rl.close()
+}
