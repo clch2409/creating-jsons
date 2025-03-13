@@ -1,37 +1,38 @@
-import readline from 'node:readline/promises';
+import rl from './readline-interface.mjs'
 import  { writeFile } from 'node:fs/promises';
+import Insumo from './model/Insumo.mjs';
+import data from '../mi-desayunito-project/web/json/insumos.json' with {type: 'json'}
 
-let insumos = []
+const insumos = data.length > 0 ? data : [];
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
+if (insumos.length === 0){
+  console.log('No se encuentran registrado ningún insumo.');
+}
+else{
+  console.log('Este es el listado de insumos:\n', insumos)
+}
 
-rl.on('close', () => {
-  process.exit(0);
-})
+const ingresarInsumos = await rl.question('¿Desea comenzar a registrar? (S/N): ')
 
-while(true){
-  const nombre = await rl.question('Escribe el nombre del insumo: ')
-  const precio = await rl.question('Escribe el precio del insumo: ')
-  const proveedor = await rl.question('Escribe el proveedor del insumo: ')
-  const tipoDeInsumo = await rl.question('Escribe el tipo de insumo: ')
-  const continuar = await rl.question('Deseas agregar otro insumo? (S/N): ')
-
-  insumos.push({
-    nombre,
-    precio,
-    proveedor,
-    tipoDeInsumo
-  })
-
-  console.log(insumos)
+if(ingresarInsumos === 'S'){
+  while(true){
+    const insumo = new Insumo();
+    insumo.nombre = await rl.question('Escribe el nombre del insumo: ');
+    insumo.proveedor = await rl.question('Escribe el proveedor del insumo: ');
+    insumo.tipoInsumo = await rl.question('Escribe el tipo de insumo: ');
+    const continuar = await rl.question('¿Desea seguir agregando más insumos? (S/N): ')
   
-  if(continuar === 'N')  {
-    await guardarInsumos('../mi-desayunito-project/web/json/insumos.json', `${JSON.stringify(insumos)}`)
-    break;
+    insumos.push(insumo)
+  
+    console.log(insumos)
+    
+    if(continuar === 'N')  {
+      await guardarInsumos('../mi-desayunito-project/web/json/insumos.json', `${JSON.stringify(insumos)}`)
+      break;
+    }
   }
+}else{
+  rl.close()
 }
 
 async function guardarInsumos(path, data) {
