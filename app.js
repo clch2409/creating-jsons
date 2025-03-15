@@ -16,26 +16,44 @@ const ingresarInsumos = await rl.question('¿Desea comenzar a registrar? (S/N): 
 
 if(ingresarInsumos === 'S'){
   while(true){
-    const insumo = new Insumo();
-    insumo.nombre = await rl.question('Escribe el nombre del insumo: ');
-    insumo.proveedor = await rl.question('Escribe el proveedor del insumo: ');
-    insumo.tipoInsumo = await rl.question('Escribe el tipo de insumo: ');
-    const continuar = await rl.question('¿Desea seguir agregando más insumos? (S/N): ')
-  
-    insumos.push(insumo)
-  
-    console.log(insumos)
+    const registroValido = await registrarInsumo()
     
-    if(continuar === 'N')  {
-      await guardarInsumos('../mi-desayunito-project/web/json/insumos.json', `${JSON.stringify(insumos)}`)
-      break;
+    if (registroValido){
+      const continuar = await rl.question('¿Desea continuar registrando?: ')
+      if(continuar === 'N')  {
+        await guardarInsumos('../mi-desayunito-project/web/json/insumos.json', `${JSON.stringify(insumos)}`)
+        break;
+      }
     }
   }
 }else{
   rl.close()
 }
 
-async function guardarInsumos(path, data) {
-  const archivo = await writeFile(path, data)
+async function registrarInsumo(){
+  const insumo = new Insumo();
+  insumo.nombre = await rl.question('Escribe el nombre del insumo: ');
+  insumo.proveedor = await rl.question('Escribe el proveedor del insumo: ');
+  insumo.tipoInsumo = await rl.question('Escribe el tipo de insumo: ');
+  const insumoValido = await validarRegistro(insumo)
+  
+  return insumoValido;
+}
+
+async function validarRegistro(insumo){
+  console.log('\nEste es el insumo a registrar:\n', insumo, '\n');
+
+  const respuesta = await rl.question('¿Estás de acuerdo son la información a registrar? (S/N): ');
+
+  if (respuesta === 'N'){
+    return false;
+  }
+  else{
+    return true;
+  }
+}
+
+async function guardarInsumos(rutra, data) {
+  const archivo = await writeFile(rutra, data)
   rl.close()
 }
