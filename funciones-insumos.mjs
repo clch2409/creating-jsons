@@ -7,24 +7,31 @@ export async function registrarInsumo(){
   insumo.nombre = await rl.question('Escribe el nombre del insumo: ');
   insumo.proveedor = await rl.question('Escribe el proveedor del insumo: ');
   insumo.tipoInsumo = await rl.question('Escribe el tipo de insumo: ');
-  const insumoValido = await validarRegistroInsumo(insumo)
   
-  return insumoValido;
+  return validarRegistroInsumo(insumo);
 }
 
 export async function validarRegistroInsumo(insumo){
   console.log('\nEste es el insumo a registrar:\n', insumo, '\n');
 
-  const respuesta = await rl.question('¿Estás de acuerdo son la información a registrar? (S/N): ');
+  
   const objetoRespuesta = {
     insumo: insumo,
   }
 
-  if (respuesta === 'N'){
-    objetoRespuesta.valido = false;
-  }
-  else{
-    objetoRespuesta.valido = true;
+  while(true){
+    const respuesta = await rl.question('¿Estás de acuerdo son la información a registrar? (S/N): ');
+    if (respuesta === 'N'){
+      objetoRespuesta.valido = false;
+      break;
+    }
+    else if (respuesta === 'S'){
+      objetoRespuesta.valido = true;
+      break;
+    }
+    else{
+      console.log('Ingrese una respuesta como S o N.')
+    }
   }
 
   return objetoRespuesta;

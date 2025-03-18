@@ -37,8 +37,8 @@ export async function validarRegistro(producto){
   return objetoProducto;
 }
 
-export async function guardarMenu(){
-  const archivo = await writeFile(rutra, data);
+export async function guardarMenu(ruta, data){
+  const archivo = await writeFile(ruta, data);
   console.log('El archivo se ha guardado con exito');
   rl.close()
 }
