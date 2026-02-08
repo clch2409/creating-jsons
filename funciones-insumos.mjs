@@ -1,5 +1,6 @@
 import rl from "./readline-interface.mjs";
 import { writeFile } from "node:fs/promises";
+
 import Insumo from "./model/Insumo.mjs";
 import {
   PROVEEDORES,
@@ -8,12 +9,16 @@ import {
   mostrarMenuSeleccion,
 } from "./utils.mjs";
 
+const insumos = dataInsumos.length > 0 ? dataInsumos : [];
+
 export async function registrarInsumo() {
   const insumo = new Insumo();
 
   console.log("\n" + "━".repeat(70));
   console.log("🆕  REGISTRAR NUEVO INSUMO");
   console.log("━".repeat(70));
+
+  insumo.id = insumos.length > 0 ? insumos[insumos.length - 1].id + 1 : 1;
 
   insumo.nombre = await rl.question("\n📝 Escribe el nombre del insumo: ");
 
@@ -37,7 +42,7 @@ export async function registrarInsumo() {
   return validarRegistroInsumo(insumo);
 }
 
-export function mostrarTablaInsumos(insumos) {
+export function mostrarTablaInsumos() {
   if (insumos.length === 0) {
     console.log("\n📦 No hay insumos registrados aún.\n");
     return;

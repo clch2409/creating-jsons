@@ -37,7 +37,7 @@ async function registro(tipoRegistro) {
   while (true) {
     let registroValido = null;
     if (tipoRegistro === 1) {
-      mostrarTablaInsumos(insumos);
+      mostrarTablaInsumos();
       registroValido = await registrarInsumo();
     } else if (tipoRegistro === 2) {
       console.log("\n=== PRODUCTOS REGISTRADOS ===");
